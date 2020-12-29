@@ -1,0 +1,6 @@
+.map
+.idea
+.DS_Store
+node_modules
+public/app.*
+public/bundle.*
