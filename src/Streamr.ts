@@ -11,13 +11,19 @@ interface Auth {
 
 interface Filter {
     last?: number,
-    from?: { timestamp: number }
+    from?: { timestamp: number },
     to?: { timestamp: number }
+}
+
+interface Permission {
+    id: number,
+    user: string,
+    operation: string
 }
 
 export const streamrCollect = async (streamId: string, filter: Filter): Promise<object[]> => {
     return new Promise( async (resolve, reject) => {
-        console.log('Collect data from Streamr ...')
+        console.log('Create stream snapshot ...')
 
         const provider = <AbstractProvider> await detectEthereumProvider()
 
@@ -30,19 +36,19 @@ export const streamrCollect = async (streamId: string, filter: Filter): Promise<
 
         const client = <StreamrClient> new StreamrClient({ auth, verifySignatures: 'never' })
 
-        const stream = await client.getStream(streamId)
-
-        if (!stream) {
-            return reject(new Error('Requested Stream not found.'))
-        }
-
-        // const permissions = await stream.hasPermission('stream_get', '0x688759bcbb6adf32a07e91f6de84d181b252e655')
-
-        // return console.log(permissions)
-
         sessionToken = <string> await client.session.getSessionToken()
 
         setSessionToken(sessionToken)
+
+        const stream = await client.getStream(streamId)
+
+        if (!stream) {
+            return reject(new Error('The stream you were looking for was not found.'))
+        }
+
+        if (! await hasSharePermission(stream)) {
+            return reject(new Error('The stream does not have share permission.'))
+        }
 
         const subscription = client.subscribe(
             { stream: streamId, resend: filter },
@@ -50,6 +56,8 @@ export const streamrCollect = async (streamId: string, filter: Filter): Promise<
         )
 
         subscription.on('resent', () => client.disconnect())
+        subscription.on('no_resend', () => client.disconnect())
+        subscription.on('error', error => reject(error))
 
         client.on('disconnected', () => resolve(data))
         client.on('error', error => reject(error))
@@ -62,4 +70,10 @@ const getSessionToken = (): string => {
 
 const setSessionToken = (sessionToken: string): void => {
     window.sessionStorage.setItem(STREAMR_SESSION_TOKEN, sessionToken)
+}
+
+const hasSharePermission = async (stream): Promise<boolean> => {
+    const permissions = <Permission[]> await stream.getMyPermissions()
+
+    return !!permissions.filter(e => e.operation === 'stream_share').length
 }
