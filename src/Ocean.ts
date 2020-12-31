@@ -9,7 +9,7 @@ import type { Metadata } from "@oceanprotocol/lib/dist/node/ddo/interfaces/Metad
 
 export const oceanPublish = async (fileMetadata: File): Promise<DDO> => {
     return new Promise( async (resolve) => {
-        console.log('Publish to Ocean ...')
+        console.log('Publish on Ocean Market ...')
 
         const provider = <AbstractProvider> await detectEthereumProvider()
         const web3 = <Web3> new Web3(provider)
@@ -44,9 +44,7 @@ export const oceanPublish = async (fileMetadata: File): Promise<DDO> => {
                 files: [fileMetadata]
             },
             additionalInformation: {
-                description: 'A *better* `code` for **description**',
-                inLanguage: 'en',
-                // tags: ['stream', 'streamr'],
+                description: 'A *better* `code` for **description**'
             }
         }
 

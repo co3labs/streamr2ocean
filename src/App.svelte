@@ -9,7 +9,7 @@
             return alert('You need an Ethereum Client for using this function')
         }
 
-        streamrCollect('DQtgcUkCSRG4_AcQISerCQ', { last: 5 })
+        streamrCollect('0x688759bcbb6adf32a07e91f6de84d181b252e655/just-a-test', { last: 5 })
             .then(streamrJson => skynetUpload(streamrJson))
             .then(fileMetadata => oceanPublish(fileMetadata))
             .then(ddo => console.log(ddo))
@@ -17,7 +17,8 @@
     }
 
     onMount(async () => {
-        streamrCollect('DQtgcUkCSRG4_AcQISerCQ', { last: 5 })
+        // streamrCollect('DQtgcUkCSRG4_AcQISerCQ', { last: 5 })
+        streamrCollect('0x688759bcbb6adf32a07e91f6de84d181b252e655/just-a-test', { last: 5 })
         // await oceanPublish()
     })
 </script>
