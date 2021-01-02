@@ -1,17 +1,17 @@
 import Web3 from 'web3'
 import { OCEAN_MARKETPLACE_ADDRESS } from './Config'
 import { DDO, Ocean, Config, ConfigHelper, Account } from '@oceanprotocol/lib'
-import detectEthereumProvider from '@metamask/detect-provider'
+import createMetaMaskProvider  from 'metamask-extension-provider'
 
 import type { AbstractProvider } from 'web3-core'
 import type { File } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import type { Metadata } from "@oceanprotocol/lib/dist/node/ddo/interfaces/Metadata"
 
-export const oceanPublish = async (fileMetadata: File): Promise<DDO> => {
-    return new Promise( async (resolve) => {
-        console.log('Publish on Ocean Market ...')
+export const oceanPublish = async (asset: Metadata, file: File): Promise<DDO> => {
+    return new Promise( async (resolve, reject) => {
+        window['streamr2ocean'].status = 'Connect Ocean protocol ...'
 
-        const provider = <AbstractProvider> await detectEthereumProvider()
+        const provider = <AbstractProvider> await createMetaMaskProvider()
         const web3 = <Web3> new Web3(provider)
         const network = await web3.eth.net.getNetworkType()
         const config = <Config> { ...(new ConfigHelper().getConfig(network)), web3Provider: web3 }
@@ -27,29 +27,29 @@ export const oceanPublish = async (fileMetadata: File): Promise<DDO> => {
         const serviceCost = '1'
         const publishedDate = new Date(Date.now()).toISOString().split('.')[0] + 'Z'
 
+        window['streamr2ocean'].status = 'Create data token ...'
+
         const tokenAddress = await ocean.datatokens.create(config.metadataCacheUri!, accountId)
 
+        window['streamr2ocean'].status = 'Mint data token ...'
+
         await ocean.datatokens.mint(tokenAddress, accountId, tokenCap)
+
+        window['streamr2ocean'].status = 'Approve data token ...'
+
         await ocean.datatokens.approve(tokenAddress, OCEAN_MARKETPLACE_ADDRESS, tokenAmount, accountId)
+
+        window['streamr2ocean'].status = 'Create access service ...'
 
         const accessService = await ocean.assets.createAccessServiceAttributes(account, serviceCost, publishedDate)
 
-        const asset = <Metadata> {
-            main: {
-                type: 'dataset',
-                name: 'dataset-v7',
-                dateCreated: publishedDate,
-                author: 'team-v7',
-                license: 'MIT',
-                files: [fileMetadata]
-            },
-            additionalInformation: {
-                description: 'A *better* `code` for **description**'
-            }
-        }
+        asset.main.dateCreated = publishedDate
+        asset.main.files = [file]
 
-        const ddo = <DDO> await ocean.assets.create(asset, account, [accessService], tokenAddress)
+        window['streamr2ocean'].status = 'Publish asset ...'
 
-        return resolve(ddo)
+        ocean.assets.create(asset, account, [accessService], tokenAddress)
+            .then(ddo => resolve(ddo))
+            .catch(error => reject(error))
     })
 }

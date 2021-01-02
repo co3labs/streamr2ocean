@@ -1,6 +1,5 @@
 {
   "include": ["src", "types"],
-  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
     "module": "esnext",
     "lib": ["dom", "esnext"],
