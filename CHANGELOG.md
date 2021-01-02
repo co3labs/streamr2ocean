@@ -1,5 +1,8 @@
 ### Changelog
 
+#### 0.3.0 (2021-01-03)
+* Use `getEndpointUrl()` to investigate the endpoint url
+
 #### 0.2.0 (2021-01-02)
 * Add Chromium extension
 * Remove Svelte from project
