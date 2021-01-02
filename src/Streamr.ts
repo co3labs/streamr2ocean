@@ -1,6 +1,7 @@
 import StreamrClient from 'streamr-client'
+import { getEndpointUrl } from 'streamr-client/src/utils'
 import createMetaMaskProvider  from 'metamask-extension-provider'
-import { STREAMR_SESSION_TOKEN, STREAMR_API_ENDPOINT } from './Config'
+import { STREAMR_SESSION_TOKEN } from './Config'
 
 import type { AbstractProvider } from 'web3-core'
 
@@ -45,8 +46,10 @@ export const streamrCollect = async (streamId: string, count: number): Promise<o
             return reject(new Error('Share permission missing'))
         }
 
+        const endpointUrl = getEndpointUrl(client.options.restUrl, 'streams', streamId, 'data', 'partitions', 0, 'last') + `?count=${count}`
+
         // No client.subscribe(), because Chrome Extensions can't handle WebSockets
-        fetchDataWithoutWebsocket(streamId, count)
+        fetchStreamSnapshot(endpointUrl)
             .then(data => resolve(data))
             .catch(error => reject(error))
     })
@@ -66,36 +69,30 @@ const hasSharePermission = async (stream): Promise<boolean> => {
     return !!permissions.filter(e => e.operation === 'stream_share').length
 }
 
-const fetchDataWithoutWebsocket = async (streamId: string, count: number): Promise<object[]> => {
-    const apiEndpointUrl = STREAMR_API_ENDPOINT
-        .replace('%streamId%', encodeURIComponent(streamId))
-        .replace('%count%', encodeURIComponent(count))
-
+const fetchStreamSnapshot = async (url: string): Promise<object[]> => {
     return new Promise( async (resolve, reject) => {
-        fetchRetry(apiEndpointUrl, 5)
+        fetchRetry(url, 3)
             .then(json => resolve(json.map(item => item['content'])))
             .catch(error => reject(error))
     })
 }
 
 const fetchRetry = async (url: string, retries: number): Promise<object[]> => {
-    return new Promise( async (resolve, reject) => {
-        fetch(url).then(async response => {
-            if (!response.ok || response.status !== 200) {
-                return reject(new Error('The stream has no content'))
-            }
+    return fetch(url).then(async response => {
+        if (!response.ok || response.status !== 200) {
+            return (new Error('The stream has no content'))
+        }
 
-            const json = await response.json()
+        const json = await response.json()
 
-            if (json.length) {
-                return resolve(json)
-            }
+        if (json.length) {
+            return (json)
+        }
 
-            if (retries > 0) {
-                console.log('No content received from API, try again', retries)
+        if (retries > 0) {
+            console.log('No content received from API, try again', retries)
 
-                return fetchRetry(url, retries - 1)
-            }
-        })
+            return fetchRetry(url, retries - 1)
+        }
     })
 }
