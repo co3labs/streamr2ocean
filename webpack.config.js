@@ -1,11 +1,13 @@
 const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     devtool: "source-map",
     target: "web",
     entry: {
-        app: './src/app.ts',
+        content: './src/content.js',
     },
     output: {
         filename: '[name].js',
@@ -14,11 +16,8 @@ module.exports = {
         umdNamedDefine: true,
     },
     resolve: {
-        alias: {
-            svelte: path.resolve('node_modules', 'svelte')
-        },
-        extensions: ['.ts', '.js', '.svelte'],
-        mainFields: ['svelte', 'browser', 'module', 'main'],
+        extensions: ['.ts', '.js'],
+        mainFields: ['browser', 'module', 'main'],
     },
     module: {
         rules: [
@@ -28,12 +27,14 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.svelte$/,
-                use: 'svelte-loader',
-                exclude: /node_modules/,
+                test: /\.css$/i,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
             },
         ],
     },
+    plugins: [
+        new MiniCssExtractPlugin()
+    ],
     node: {
         console: false,
         fs: 'empty',
@@ -41,9 +42,9 @@ module.exports = {
         tls: 'empty',
         child_process: 'empty',
     },
-    devServer: {
-        contentBase: './public',
-        port: 5000,
-        stats: 'errors-only',
-    }
+    optimization: {
+        minimizer: [
+            new CssMinimizerPlugin(),
+        ],
+    },
 }

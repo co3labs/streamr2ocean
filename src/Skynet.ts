@@ -6,10 +6,10 @@ import type { File as Metadata } from '@oceanprotocol/lib/dist/node/ddo/interfac
 export const skynetUpload = async (json: object[]): Promise<Metadata> => {
     return new Promise( async (resolve, reject) => {
         if (!json.length) {
-            return reject(new Error('The stream does not have content for upload'))
+            return reject(new Error('Data set has no content'))
         }
 
-        console.log('Upload to Skynet ...')
+        window['streamr2ocean'].status = 'Upload data set ...'
 
         const encoding = 'UTF-8'
         const checksumType = 'MD5'
