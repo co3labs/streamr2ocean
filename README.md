@@ -33,7 +33,7 @@ During the development the focus was on the implementation of a bridge between S
 
 ### How to
 * Install the Chromium extension
-    * [Download the last build](build/streamr2ocean.zip)
+    * [Download the last build](https://github.com/sergejmueller/streamr2ocean/raw/master/build/streamr2ocean.zip)
     * Extract the `.zip` file
     * Switch to your Chromium-based browser 
     * Go to `chrome://extensions/`
