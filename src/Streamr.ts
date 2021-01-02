@@ -71,7 +71,7 @@ const hasSharePermission = async (stream): Promise<boolean> => {
 
 const fetchStreamSnapshot = async (url: string): Promise<object[]> => {
     return new Promise( async (resolve, reject) => {
-        fetchRetry(url, 3)
+        fetchRetry(url, 5)
             .then(json => resolve(json.map(item => item['content'])))
             .catch(error => reject(error))
     })
@@ -80,19 +80,21 @@ const fetchStreamSnapshot = async (url: string): Promise<object[]> => {
 const fetchRetry = async (url: string, retries: number): Promise<object[]> => {
     return fetch(url).then(async response => {
         if (!response.ok || response.status !== 200) {
-            return (new Error('The stream has no content'))
+            throw new Error('The stream has no content')
         }
 
         const json = await response.json()
 
         if (json.length) {
-            return (json)
+            return json
         }
 
         if (retries > 0) {
-            console.log('No content received from API, try again', retries)
+            window['streamr2ocean'].status = `API returned an empty stream snapshot, retry ...`
 
             return fetchRetry(url, retries - 1)
         }
+
+        throw new Error('Still an empty stream snapshot, aborted')
     })
 }

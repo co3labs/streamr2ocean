@@ -1,7 +1,7 @@
 {
     "name": "streamr2ocean",
     "description": "Publish Streamr Streams on Ocean Market",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "license": "MIT",
     "private": true,
     "scripts": {
