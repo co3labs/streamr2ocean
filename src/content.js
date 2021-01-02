@@ -1,8 +1,8 @@
 import './content.css'
 
-import { oceanPublish } from './Ocean';
-import { skynetUpload } from './Skynet';
-import { streamrCollect } from './Streamr';
+import { oceanPublish } from './Ocean'
+import { skynetUpload } from './Skynet'
+import { streamrCollect } from './Streamr'
 import { OCEAN_MARKETPLACE_URL } from './Config'
 
 class Publish {

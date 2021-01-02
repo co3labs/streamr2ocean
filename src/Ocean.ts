@@ -5,7 +5,7 @@ import createMetaMaskProvider  from 'metamask-extension-provider'
 
 import type { AbstractProvider } from 'web3-core'
 import type { File } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import type { Metadata } from "@oceanprotocol/lib/dist/node/ddo/interfaces/Metadata"
+import type { Metadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Metadata'
 
 export const oceanPublish = async (asset: Metadata, file: File): Promise<DDO> => {
     return new Promise( async (resolve, reject) => {

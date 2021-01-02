@@ -1,5 +1,8 @@
 ### Changelog
 
+#### 0.4.0 (2021-01-03)
+* Clean up source code
+
 #### 0.3.0 (2021-01-03)
 * Use `getEndpointUrl()` to investigate the endpoint url
 
