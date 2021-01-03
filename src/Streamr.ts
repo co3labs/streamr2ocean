@@ -90,7 +90,7 @@ const fetchRetry = async (url: string, retries: number): Promise<object[]> => {
         }
 
         if (retries > 0) {
-            window['streamr2ocean'].status = `API returned an empty stream snapshot, retry ...`
+            window['streamr2ocean'].status = 'API returned an empty stream snapshot, retry ...'
 
             return fetchRetry(url, retries - 1)
         }

@@ -1,5 +1,8 @@
 ### Changelog
 
+#### 0.4.1 (2021-01-03)
+* Modify `content_scripts` match pattern
+
 #### 0.4.0 (2021-01-03)
 * Clean up source code
 
