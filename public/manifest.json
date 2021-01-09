@@ -1,5 +1,5 @@
 {
-    "version": "0.4.1",
+    "version": "0.4.2",
     "name": "Streamr Streams ➡️ Ocean Market",
     "description": "Publish Streamr Streams on Ocean Market",
     "content_security_policy": "script-src 'self'; object-src 'self'",
