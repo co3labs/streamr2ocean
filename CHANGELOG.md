@@ -1,5 +1,8 @@
 ### Changelog
 
+#### 0.4.2 (2021-01-09)
+* Set Sia provider to `https://www.siacdn.com`
+
 #### 0.4.1 (2021-01-03)
 * Modify `content_scripts` match pattern
 

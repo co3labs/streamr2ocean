@@ -7,9 +7,9 @@
 Publish and monetize *your* Streamr Streams on Ocean Market. Directly from the Streamr Core app.
 
 ### Challenge
-During the development the focus was on the implementation of a bridge between Streamr Network, Skynet and Ocean Protocol. The publishing process in single steps: 
+During the development the focus was on the implementation of a bridge between Streamr Network, Sia and Ocean Protocol. The publishing process in single steps: 
 1. Extract static content from a selected Streamr stream ([Streamr.ts](src/Streamr.ts))
-2. Upload the stream snapshot to Skynet, get an encrypted file url ([Skynet.ts](src/Skynet.ts))
+2. Upload the stream snapshot to a Sia provider, get an encrypted file url ([Skynet.ts](src/Skynet.ts))
 3. Use Ocean Protocol to publish the data set on Ocean Market ([Ocean.ts](src/Ocean.ts))
 
 

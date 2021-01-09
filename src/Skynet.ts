@@ -18,7 +18,7 @@ export const skynetUpload = async (json: object[]): Promise<Metadata> => {
         const blobData = <BlobPart> JSON.stringify(json)
         const contentLength = <string> blobData.toString().length.toString()
         const checksum = <string> MD5(blobData).toString()
-        const client = <SkynetClient> new SkynetClient('https://siasky.net')
+        const client = <SkynetClient> new SkynetClient('https://www.siacdn.com')
 
         try {
             const blob = <Blob> new Blob([blobData], { type: contentType })
